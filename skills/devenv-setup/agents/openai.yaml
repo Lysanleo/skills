@@ -1,0 +1,7 @@
+interface:
+  display_name: "devenv Setup"
+  short_description: "Set up repo dev environments with devenv"
+  default_prompt: "Use $devenv-setup to initialize this repo's development environment with devenv."
+
+policy:
+  allow_implicit_invocation: true
