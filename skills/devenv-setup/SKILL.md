@@ -23,7 +23,7 @@ Goal: make repo runnable through `devenv`, with smallest useful config and clear
   - Lock refresh: use `devenv update --no-tui`.
   - Validation: use `devenv shell`, `devenv tasks`, and `devenv test`.
 - Edit generated files only after CLI scaffold exists or current files prove manual edit is better.
-- Keep phase 1 small: packages, language runtime, package manager, tasks, optional `.envrc`.
+- Keep phase 1 small: packages, language runtime, package manager, tasks, optional auto activation.
 - Do not solve NixOS system config here. If host config is needed, route to NixOS/system skill.
 - Do not invent package attr names from memory. For uncertain Nix packages/options, use live Nix docs/tooling.
 - When devenv CLI, options, language modules, or service modules are uncertain, check current docs first.
@@ -78,7 +78,11 @@ Prefer this order:
 3. `tasks` for repeatable build/test/dev commands.
 4. `services` only when repo truly needs local DB/cache/search/etc.
 5. `enterTest` for environment health checks; use tasks when setup grows.
-6. `.envrc` with `use devenv` when user wants direnv/editor auto-load.
+6. Auto activation:
+   - Prefer `devenv shell` plus `devenv hook` for devenv 2.x shell auto activation.
+   - Use `.envrc` only when the user wants direnv/editor in-place environment loading.
+   - For direnv, create `.envrc` manually; `devenv init` does not create it.
+   - Put shared defaults in `devenv.nix`. Use `use devenv <flags>` only for local or opt-in overrides.
 
 ## Docs Policy
 
