@@ -28,6 +28,7 @@ languages.python = {
 ```nix
 languages.python = {
   enable = true;
+  venv.enable = true;
   uv = {
     enable = true;
     sync.enable = true;
@@ -36,6 +37,7 @@ languages.python = {
 ```
 
 - Use `uv.sync.enable = true` when dependencies should sync on shell entry. If the repo wants manual control, keep `uv.enable = true`, set no auto-sync, and add a task such as `"python:sync".exec = "uv sync";`.
+- Use `venv.enable = true` when devenv should manage the virtualenv for `uv`/plain venv workflows.
 - For Poetry projects:
 
 ```nix
@@ -43,11 +45,13 @@ languages.python = {
   enable = true;
   poetry = {
     enable = true;
+    activate.enable = true;
     install.enable = true;
   };
 };
 ```
 
+- Use `poetry.activate.enable = true` when shell commands should see the Poetry environment directly. If the repo expects explicit `poetry run`, install-only is enough.
 - For `requirements.txt` or plain virtualenv projects:
 
 ```nix

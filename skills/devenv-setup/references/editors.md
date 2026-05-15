@@ -4,13 +4,16 @@ Use when editor or LSP behavior matters.
 
 ## Direnv
 
-Use direnv when the user wants in-place environment loading for shells or editors.
-For devenv 2.x, prefer `devenv shell` plus `devenv hook` unless direnv is explicitly useful.
-`.envrc` is not created by `devenv init`; create it manually.
+Use direnv when the user explicitly wants in-place environment loading or an editor/LSP needs direnv.
+For devenv 2.x, prefer `devenv shell` plus `devenv hook <shell>` unless direnv is explicitly useful.
+`.envrc` is not created by `devenv init`; create it manually only when direnv is needed.
+Never write a bare `.envrc` containing only `use devenv`; it fails when `use_devenv` has not been loaded.
+`devenv direnvrc` uses a Bash `.envrc`; do not assume fish, zsh, nushell, aliases, functions, or shell-specific hooks are preserved.
 
 `.envrc`:
 
 ```bash
+#!/usr/bin/env bash
 eval "$(devenv direnvrc)"
 use devenv
 ```
@@ -18,6 +21,8 @@ use devenv
 Pass devenv flags after `use devenv` only for local or opt-in overrides:
 
 ```bash
+#!/usr/bin/env bash
+eval "$(devenv direnvrc)"
 use devenv --option services.postgres.enable:bool true
 ```
 
@@ -31,6 +36,7 @@ direnv allow
 ```
 
 After changing `.envrc`, run `direnv allow` again.
+If an existing `.envrc` has only `use devenv`, replace it with the template above before debugging editor/LSP behavior.
 
 ## LSP Checks
 

@@ -3,10 +3,10 @@ name: devenv-setup
 description: >
   Set up or adjust project development environments using devenv, especially on NixOS.
   Use when the user wants to initialize a repo dev environment, create or modify
-  devenv.nix/devenv.yaml/.envrc, add packages/languages/services/tasks, wire direnv,
-  or make build/test/dev commands reproducible. Prefer devenv CLI commands such as
-  devenv init, devenv inputs add, devenv update, devenv shell, devenv tasks, and
-  devenv test before hand-writing configuration. Not for NixOS host configuration
+  devenv.nix/devenv.yaml, add packages/languages/services/tasks, optionally configure
+  shell/editor activation, or make build/test/dev commands reproducible. Prefer devenv CLI commands such as
+  devenv init, devenv inputs add, devenv update, devenv shell, devenv tasks list,
+  devenv tasks run, and devenv test before hand-writing configuration. Not for NixOS host configuration
   or production deployment.
 ---
 
@@ -21,13 +21,15 @@ Goal: make repo runnable through `devenv`, with smallest useful config and clear
   - New repo: run `devenv init . --no-tui` when available.
   - Inputs: use `devenv inputs add <name> <url> --no-tui` when possible.
   - Lock refresh: use `devenv update --no-tui`.
-  - Validation: use `devenv shell`, `devenv tasks`, and `devenv test`.
+  - Validation: use `devenv shell`, `devenv tasks list`, `devenv tasks run`, and `devenv test`.
 - Edit generated files only after CLI scaffold exists or current files prove manual edit is better.
-- Keep phase 1 small: packages, language runtime, package manager, tasks, optional auto activation.
+- Keep phase 1 small: packages, language runtime, package manager, tasks, and validation.
 - Do not solve NixOS system config here. If host config is needed, route to NixOS/system skill.
 - Do not invent package attr names from memory. For uncertain Nix packages/options, use live Nix docs/tooling.
 - When devenv CLI, options, language modules, or service modules are uncertain, check current docs first.
 - Keep `devenv.lock` tracked unless repo policy says otherwise. Keep `.devenv/` untracked.
+- Do not create `.envrc` during default initialization. Choose activation separately after base devenv works.
+- Never write a bare `.envrc` containing only `use devenv`; load devenv's direnv helper first. See `references/editors.md`.
 
 ## First Pass
 
@@ -55,7 +57,7 @@ devenv init . --no-tui
 devenv inputs add nixpkgs github:NixOS/nixpkgs/nixos-unstable --no-tui
 devenv update --no-tui
 devenv shell
-devenv tasks
+devenv tasks list
 devenv test
 ```
 
@@ -69,6 +71,14 @@ devenv shell <command>
 
 Use explicit smoke checks over weak `enterShell` banners.
 
+## Activation Decision
+
+Choose activation separately after the base environment validates:
+
+1. One-off commands, CI, and validation: use `devenv shell <command>`.
+2. Interactive auto activation in the user's normal shell: prefer `devenv hook <shell>`.
+3. Editor/LSP compatibility or explicit in-place env loading: use direnv; see `references/editors.md`.
+
 ## Config Priorities
 
 Prefer this order:
@@ -78,11 +88,6 @@ Prefer this order:
 3. `tasks` for repeatable build/test/dev commands.
 4. `services` only when repo truly needs local DB/cache/search/etc.
 5. `enterTest` for environment health checks; use tasks when setup grows.
-6. Auto activation:
-   - Prefer `devenv shell` plus `devenv hook` for devenv 2.x shell auto activation.
-   - Use `.envrc` only when the user wants direnv/editor in-place environment loading.
-   - For direnv, create `.envrc` manually; `devenv init` does not create it.
-   - Put shared defaults in `devenv.nix`. Use `use devenv <flags>` only for local or opt-in overrides.
 
 ## Docs Policy
 
@@ -104,7 +109,7 @@ Doc lookup preference:
 
 Read only the relevant reference after repo inspection:
 
-- `references/core.md`: universal packages, tasks, and setup defaults.
+- `references/core.md`: universal packages, tasks, setup defaults, and common validation.
 - `references/node-typescript.md`: Node.js and TypeScript projects.
 - `references/rust.md`: Rust projects.
 - `references/python.md`: Python projects.
@@ -113,14 +118,6 @@ Read only the relevant reference after repo inspection:
 - `references/jvm.md`: Java/JVM projects.
 - `references/services.md`: local databases, caches, search, and processes.
 - `references/editors.md`: direnv, editor env, and LSP checks.
-
-## Common Validation
-
-- Build shell: `devenv shell true`
-- List tasks: `devenv tasks`
-- Run env tests: `devenv test`
-- Run project test: `devenv shell <repo-test-command>`
-- Editor/LSP smoke: run language server or compiler check from inside `devenv shell`.
 
 ## Failure Handling
 
