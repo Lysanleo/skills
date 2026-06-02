@@ -1,0 +1,4 @@
+interface:
+  display_name: "Effect v4 Development"
+  short_description: "Effect v4 code with current cited docs."
+  default_prompt: "Use $effect-v4-development-guideline to build or review my Effect v4 TypeScript code with current documentation citations."
