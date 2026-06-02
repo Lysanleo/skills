@@ -17,6 +17,7 @@ Use Effect to make dependencies, errors, resources, interruption, config, valida
 2. Verify version state before v4-specific claims:
    - `npm view effect version dist-tags --json`
    - `rg '"effect"|"@effect/' package.json pnpm-lock.yaml`
+   - If registry or docs are unavailable, state that current registry/docs were not verified and base implementation on local package files only.
 3. Load `references/source-policy.md` when citations, current docs, or v4/v3 status matter.
 4. Load `references/effect-v4-patterns.md` before writing new Effect code, designing services/layers, or explaining concepts.
 5. Load `references/effect-naming-conventions.md` before creating or reviewing service, layer, schema, error, workflow, runtime, or trace names.
