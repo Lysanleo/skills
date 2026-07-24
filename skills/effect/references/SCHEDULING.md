@@ -1,4 +1,4 @@
-# Scheduling And Retry
+# Scheduling and Retry
 
 Use this when writing retries, repeats, polling workers, backoff, jitter, rate-limit-aware policies, timeouts, or pass loops.
 
@@ -133,3 +133,11 @@ Use this for operation-level retries over typed provider errors. For Effect Http
 - Use `Effect.sleep(...)` inside production workflows only when sleeping itself is the domain behavior.
 - Avoid manual sleep loops; use `Effect.repeat(...)` with `Schedule` for recurring work.
 - In tests, use `TestClock` rather than real time. Read `TESTING.md`.
+
+## Official ai-docs
+
+- `ai-docs/src/06_schedule`
+
+The official examples combine delay schedules with attempt or predicate
+bounds. Keep retryability in the typed error model so authentication,
+validation, and other permanent failures fail fast.

@@ -1,4 +1,4 @@
-# Caching, Memoization, And Request Dedupe
+# Caching, Memoization, and Request Dedupe
 
 Use this when memoizing expensive lookups, caching per-key results with TTL, deduplicating concurrent identical calls, or considering request batching.
 
@@ -74,3 +74,11 @@ Selection guide:
 - Do not build a cache inside the request handler or per call — hoist it to the owning layer.
 - Do not adopt `RequestResolver` batching for per-item REST endpoints just because "batching" sounds faster.
 - Do not put scoped client acquisition inside the cache lookup; acquire once in the layer.
+
+## Official ai-docs
+
+- Request batching: `ai-docs/src/05_batching`
+
+The reviewed `ai-docs` tree has no complete Cache topic. Confirm
+`Cache.make`, `Cache.makeWith`, `Effect.cached`, and
+`Effect.cachedWithTTL` against the target project's installed package source.

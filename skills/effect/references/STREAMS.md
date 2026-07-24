@@ -25,7 +25,8 @@ Do not use streams just to loop forever. For one repeated effect with no emitted
 - Queue-backed callback boundary: `Queue` plus `Stream.fromQueue(...)`.
 - Broadcast events: `PubSub` plus `Stream.fromPubSub(...)`.
 - Latest-value state plus updates: `SubscriptionRef`.
-- Schedule-generated ticks/values: `Stream.fromSchedule(...)`.
+- Poll an effect on a schedule: `Stream.fromEffectSchedule(...)`.
+- Emit a Schedule's outputs: `Stream.fromSchedule(...)`.
 - Paginated pull APIs: `Stream.paginate(...)`; its step function is already effectful, returning `Effect<[chunk, Option<nextState>]>`.
 - Async iterable/platform source: `Stream.fromAsyncIterable(...)` when no native Effect source exists.
 - Effect that produces a stream after reading services/config: `Stream.unwrap(...)`.
@@ -83,6 +84,8 @@ Guidance:
 - Use `Queue` when each event/item should be consumed by one consumer or worker.
 - Use `PubSub` when every subscriber should see every event.
 - Use `SubscriptionRef` when consumers need the current value and a stream of changes.
+- When a service owns a PubSub, add a finalizer that shuts it down with the
+  service Layer.
 - Expose a `Stream` from service interfaces when callers should consume events, not push into the queue.
 - Keep producer queues/private refs inside the implementation or test service.
 
@@ -133,3 +136,8 @@ Use this for projection/reconciliation streams where each key needs ordered proc
 - Use `Stream.fromQueue(...)` with a test-owned `Queue` when the test needs to drive events interactively.
 - Use `Stream.take(n)` plus `Stream.runCollect` for finite assertions.
 - Avoid real sleeps; coordinate with `Deferred`, `Queue`, `Latch`, and `TestClock`.
+
+## Official ai-docs
+
+- PubSub: `ai-docs/src/01_effect/07_pubsub`
+- Stream creation and consumption: `ai-docs/src/03_stream`
