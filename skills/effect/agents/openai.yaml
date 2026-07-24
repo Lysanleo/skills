@@ -1,0 +1,4 @@
+interface:
+  display_name: "Effect"
+  short_description: "Build production Effect v4 TypeScript applications."
+  default_prompt: "Use $effect to build or review this Effect v4 TypeScript task."
