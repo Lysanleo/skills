@@ -65,3 +65,20 @@ export const layerConfig = (
 Use this pattern when a service naturally supports runtime config while still allowing tests to pass concrete values.
 
 Use `Layer.succeed(AppConfiguration.Service, testConfig)` when the app already wraps environment config in an application service and the test does not need to exercise Config decoding itself.
+
+## Failure Semantics
+
+- Let missing or malformed required configuration fail Layer construction.
+- Use `Config.withDefault(...)` only when the default is a real product
+  decision; it handles missing data without hiding malformed values.
+- `Config.orElse(...)` catches any `ConfigError`, so use it only when the
+  fallback is valid for both missing and malformed primary values.
+- Keep `Redacted` values redacted. Reveal them only at the adapter call that
+  requires the underlying secret.
+
+## Official ai-docs
+
+The reviewed `ai-docs` tree has no dedicated Config topic. Confirm uncertain
+APIs in the installed `effect` package's `Config.ts` and
+`ConfigProvider.ts`; do not substitute an upstream-only API into an older
+project.

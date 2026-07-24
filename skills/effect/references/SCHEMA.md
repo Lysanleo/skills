@@ -1,4 +1,4 @@
-# Schema And Data Modeling
+# Schema and Data Modeling
 
 Use this when touching data models, DTOs, row schemas, wire contracts, brands, variants, optional fields, or decoders.
 
@@ -50,6 +50,24 @@ Guidance:
 - Keep explicit mapping when behavior, joins, validation, or domain translation is involved.
 - Use `Schema.extendTo(...)` sparingly for decoded-only derived fields.
 - Use field reuse to build small related contracts, not one oversized inheritance-by-schema object.
+
+## Boundary Decoding
+
+Keep unknown data unknown until the boundary validates it.
+
+```ts
+export const decodeCreateUser = Schema.decodeUnknownEffect(CreateUserInput)
+
+export const handlePayload = Effect.fn("Users.handlePayload")(
+  function* (payload: unknown) {
+    return yield* decodeCreateUser(payload)
+  },
+)
+```
+
+Use `Schema.decodeUnknownEffect(...)` when parse failure belongs in the Effect
+error channel. Reserve synchronous or throwing construction for trusted input,
+tests, scripts, and startup code where throwing is intentional.
 
 ## Optionality And Defaults
 
@@ -109,7 +127,8 @@ Guidance:
 
 ## Errors
 
-`Schema.TaggedErrorClass` is the explicit class exception for typed Effect errors.
+`Schema.TaggedErrorClass` is the explicit class exception for reusable typed
+Effect errors. Read `ERRORS.md` before designing recovery or Cause handling.
 
 ```ts
 export class PersistenceError extends Schema.TaggedErrorClass<PersistenceError>()(
@@ -128,3 +147,12 @@ Guidance:
 - Use schema unions for public API or transport error surfaces.
 - Use `Schema.Defect()` for defect-like payloads.
 - Preserve interruption when catching broad causes at ingress, worker, or stream boundaries.
+
+## Official ai-docs
+
+- `ai-docs/src/01_effect/02_schema`
+
+The official introduction uses `Schema.Class` for invariant domain objects.
+This skill keeps `Schema.Struct` plus a same-name interface as the lighter
+default for ordinary records; use classes only when their construction and
+methods provide real value.
