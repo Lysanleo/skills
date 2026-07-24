@@ -2,6 +2,13 @@
 
 Use this when writing Effect tests, tests involving time, retry, schedules, concurrency, workers, services, fakes, or config.
 
+## Runner
+
+When the project uses `@effect/vitest`, import `describe`, `it`, `layer`, and
+assertion helpers from that package. `it.effect` runs with Effect test
+services; `it.live` deliberately opts into live runtime services. Follow the
+project's existing Effect-aware test integration when it uses another runner.
+
 ## Defaults
 
 - Use `it.effect` by default.
@@ -116,3 +123,13 @@ Guidance:
 Use `ConfigProvider.layer(ConfigProvider.fromUnknown(...))` when the test should exercise Config decoding.
 
 Use `Layer.succeed(AppConfiguration.Service, config)` when the app wraps decoded config in its own service and the test does not need to exercise env decoding.
+
+## Shared Layers
+
+Use the runner's `layer(...)` helper only when tests intentionally share one
+Layer instance and its state. Prefer a fresh provided Layer when tests should
+be isolated from each other.
+
+## Official ai-docs
+
+- `ai-docs/src/09_testing`

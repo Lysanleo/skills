@@ -2,6 +2,12 @@
 
 Use this when writing outgoing HTTP calls, Effect HttpClient adapters, status classification, HTTP retries, or rate limiting.
 
+## Version Check
+
+HTTP modules are unstable. Confirm import paths and exported combinators in the
+target project's installed `effect` and platform packages before copying an
+upstream example.
+
 Use Effect HTTP client modules for outgoing HTTP in app/provider code:
 
 - `effect/unstable/http/HttpClient`
@@ -99,3 +105,11 @@ Guidance:
 - Decode unknown response bodies with Schema at the boundary.
 - Preserve provider evidence needed for diagnosis, but redact secrets and private payloads.
 - Apply retry only for idempotent operations.
+
+## Official ai-docs
+
+- `ai-docs/src/50_http-client`
+
+Read the example together with its installed package version. In particular,
+request body helpers, retry options, and unstable import paths may differ
+between Effect releases.
