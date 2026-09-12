@@ -1,1 +1,13 @@
 .worktrees/
+
+# Devenv
+.devenv*
+devenv.local.nix
+devenv.local.yaml
+devenv.lock
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
